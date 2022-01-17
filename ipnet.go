@@ -18,8 +18,8 @@ import (
 type set map[uint64]struct{}
 
 var (
-	ipver int
-  lowbits uint64
+  Ipver int
+  Lowbits uint64
   nets *iptree.Tree
   blocklist *iptree.Tree
   allones *big.Int
@@ -140,6 +140,10 @@ func Add(n *net.IPNet) bool {
     return true
   }
   return false
+}
+
+func Enumerate() chan Pair {
+  return net.Enumerate()
 }
 
 func MakeCoveringTree(bgptableName string) {
