@@ -15,7 +15,7 @@ import (
   "github.com/infobloxopen/go-trees/iptree"
 )
 
-type set map[uint64]struct{}
+type Set map[uint64]struct{}
 
 var (
   Ipver int
@@ -37,7 +37,7 @@ func init() {
   debug = false
 }
 
-func (i set) Has(v uint64) bool {
+func (i Set) Has(v uint64) bool {
   _, ok := i[v]
   return ok
 }
@@ -131,6 +131,10 @@ func Contains(n *net.IPNet) bool {
     return true
   }
   return false
+}
+
+func GetBlockByIp(ip net.IP) (interface{}, bool) {
+  return blocklist.GetByIP(ip)
 }
 
 func Add(n *net.IPNet) bool {
