@@ -126,7 +126,14 @@ func Bounds(n *net.IPNet) (uint64, uint64) {
   }
 }
 
-func Contains(n *net.IPNet) bool {
+func ContainsIP(ip net.IP) bool {
+  if _, present := nets.GetByIP(ip); present {
+    return true
+  }
+  return false
+}
+
+func ContainsNet(n *net.IPNet) bool {
   if _, present := nets.GetByNet(n); present {
     return true
   }
@@ -138,7 +145,7 @@ func GetBlockByIP(ip net.IP) (interface{}, bool) {
 }
 
 func Add(n *net.IPNet) bool {
-  if ! Contains(n) {
+  if ! ContainsNet(n) {
     nets, _ = nets.DeleteByNet(n)
     nets.InplaceInsertNet(n, true)
     return true
