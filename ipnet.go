@@ -20,7 +20,7 @@ type Set map[uint64]struct{}
 var (
   Ipver int
   Lowbits uint64
-  nets *iptree.Tree
+  Nets *iptree.Tree
   blocklist *iptree.Tree
   allones *big.Int
   //maxthreads int
@@ -31,7 +31,7 @@ var (
 func init() {
   allones = big.NewInt(0)
   allones.SetString("0xffffffffffffffffffffffffffffffff", 0)
-  nets = iptree.NewTree()
+  Nets = iptree.NewTree()
   blocklist = iptree.NewTree()
   //maxthreads = runtime.NumCPU()
   debug = false
@@ -127,14 +127,14 @@ func Bounds(n *net.IPNet) (uint64, uint64) {
 }
 
 func ContainsIP(ip net.IP) bool {
-  if _, present := nets.GetByIP(ip); present {
+  if _, present := Nets.GetByIP(ip); present {
     return true
   }
   return false
 }
 
 func ContainsNet(n *net.IPNet) bool {
-  if _, present := nets.GetByNet(n); present {
+  if _, present := Nets.GetByNet(n); present {
     return true
   }
   return false
@@ -146,15 +146,15 @@ func GetBlockByIP(ip net.IP) (interface{}, bool) {
 
 func Add(n *net.IPNet) bool {
   if ! ContainsNet(n) {
-    nets, _ = nets.DeleteByNet(n)
-    nets.InplaceInsertNet(n, true)
+    Nets, _ = Nets.DeleteByNet(n)
+    Nets.InplaceInsertNet(n, true)
     return true
   }
   return false
 }
 
 func Enumerate() chan iptree.Pair {
-  return nets.Enumerate()
+  return Nets.Enumerate()
 }
 
 func MakeCoveringTree(bgptableName string) {
@@ -206,7 +206,7 @@ func MakeTree(bgptableName string) {
     blocked := false
     _, blocked = blocklist.GetByNet(subnet)
     if !blocked {
-		  nets.InplaceInsertNet(subnet, true)
+		  Nets.InplaceInsertNet(subnet, true)
     }
 	}
 }
