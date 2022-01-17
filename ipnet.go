@@ -83,7 +83,7 @@ func Ipv6tosixty4(IPv6Addr net.IP) uint64 {
 }
 
 func Ip2sixty4(IpAddr net.IP) uint64 {
-	if ipver == 4 {
+	if Ipver == 4 {
 		return uint64(Four2int(IpAddr))
 	}
 	return Ipv6tosixty4(IpAddr)
@@ -92,19 +92,19 @@ func Ip2sixty4(IpAddr net.IP) uint64 {
 func Sixty4toIPv6(highbits uint64) net.IP {
 	ip := make(net.IP, 16)
 	binary.BigEndian.PutUint64(ip[0:8], highbits)
-	binary.BigEndian.PutUint64(ip[8:16], lowbits)
+	binary.BigEndian.PutUint64(ip[8:16], Lowbits)
 	return ip
 }
 
 func Sixty4toIP(highbits uint64) net.IP {
-	if ipver == 4 {
+	if Ipver == 4 {
 		return Int2four(uint32(highbits))
 	}
   return Sixty4toIPv6(highbits)
 }
 
 func Broadcast(n *net.IPNet) net.IP {
-  if ipver == 4 {
+  if Ipver == 4 {
     mask := FourMask2int(n.Mask)
     network := Four2int(n.IP)
     broadcast := (network & mask) | (mask ^ 0xffffffff)
@@ -119,7 +119,7 @@ func Broadcast(n *net.IPNet) net.IP {
 }
 
 func Bounds(n *net.IPNet) (uint64, uint64) {
-  if ipver == 4 {
+  if Ipver == 4 {
     return uint64(Four2int(n.IP)), uint64(Four2int(Broadcast(n)))
   } else {
     return Ipv6tosixty4(n.IP), Ipv6tosixty4(Broadcast(n))
@@ -142,8 +142,8 @@ func Add(n *net.IPNet) bool {
   return false
 }
 
-func Enumerate() chan Pair {
-  return net.Enumerate()
+func Enumerate() chan iptree.Pair {
+  return nets.Enumerate()
 }
 
 func MakeCoveringTree(bgptableName string) {
@@ -160,9 +160,9 @@ func MakeCoveringTree(bgptableName string) {
 			break
 		}
 		cidrip := strings.Fields(string(line))[0]
-		if ipver == 4 && string(cidrip[0]) == ">" {
+		if Ipver == 4 && string(cidrip[0]) == ">" {
 			cidrip = cidrip[1:]
-		} else if ipver == 4 || string(cidrip[0]) == ":" {
+		} else if Ipver == 4 || string(cidrip[0]) == ":" {
 			continue
 		}
 		_, subnet, prsErr := net.ParseCIDR(cidrip)
