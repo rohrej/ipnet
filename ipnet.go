@@ -219,7 +219,7 @@ func MakeBlockTree(blocklistName string) {
 				break
 			}
 			_, subnet, _ := net.ParseCIDR(strings.Fields(string(line))[0])
-			nets.InplaceInsertNet(subnet, true)
+			blocklist.InplaceInsertNet(subnet, true)
 		}
 	}
 }
