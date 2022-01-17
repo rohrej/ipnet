@@ -133,7 +133,7 @@ func Contains(n *net.IPNet) bool {
   return false
 }
 
-func GetBlockByIp(ip net.IP) (interface{}, bool) {
+func GetBlockByIP(ip net.IP) (interface{}, bool) {
   return blocklist.GetByIP(ip)
 }
 
